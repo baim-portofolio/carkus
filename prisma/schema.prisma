@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id         String     @id @default(uuid())
+  email      String     @unique
+  username   String     @unique
+  password   String
+  is_admin   Boolean
+  threads    Threads[]  @relation("UserAuthor")
+  comments   Comments[] @relation("UserComment")
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  admin      Admins?    @relation("AdminUser")
+}
+
+model Admins {
+  id        String @id @default(uuid())
+  id_user   String @unique
+  id_campus String
+
+  user   Users  @relation("AdminUser", fields: [id_user], references: [id])
+  campus Campus @relation("AdminCampus", fields: [id_campus], references: [id])
+}
+
+model Campus {
+  id          String    @id @default(uuid())
+  campus_name String
+  address     String
+  description String
+  threads     Threads[] @relation("ThreadCampus")
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  admins      Admins[]  @relation("AdminCampus")
+}
+
+model Comments {
+  id         String   @id @default(uuid())
+  id_user    String
+  id_thread  String
+  comment    String
+  author     String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user   Users    @relation("UserComment", fields: [id_user], references: [id])
+  thread Threads? @relation("ThreadComments", fields: [id_thread], references: [id])
+}
+
+model Threads {
+  id         String   @id @default(uuid())
+  id_campus  String
+  id_user    String
+  title      String
+  thread     String
+  author     String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user     Users      @relation("UserAuthor", fields: [id_user], references: [id])
+  campus   Campus     @relation("ThreadCampus", fields: [id_campus], references: [id])
+  comments Comments[] @relation("ThreadComments")
+}
