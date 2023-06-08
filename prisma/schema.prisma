@@ -10,12 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model Users {
   id         String     @id @default(uuid())
   email      String     @unique
   username   String     @unique
   password   String
-  is_admin   Boolean
+  role       Role
   threads    Threads[]  @relation("UserAuthor")
   comments   Comments[] @relation("UserComment")
   created_at DateTime   @default(now())
