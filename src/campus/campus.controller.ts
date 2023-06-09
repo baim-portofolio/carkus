@@ -6,6 +6,7 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/role/roles.guard';
 import { Roles } from 'src/auth/role/roles.decorator';
 import { UseGuards } from '@nestjs/common';
+import { AllowAnonymous } from 'src/auth/guard/AllowAnonymous.decorator';
 
 @Controller('campus')
 export class CampusController {
@@ -18,16 +19,20 @@ export class CampusController {
     return this.campusService.create(createCampusDto);
   }
 
+  @AllowAnonymous()
   @Get()
   findAll() {
     return this.campusService.findAll();
   }
 
+  @AllowAnonymous()
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.campusService.findOne(+id);
+    return this.campusService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Patch('update/:id')
   update(@Param('id') id: string, @Body() updateCampusDto: UpdateCampusDto) {
     return this.campusService.update(id, updateCampusDto);
