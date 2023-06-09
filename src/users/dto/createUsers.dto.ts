@@ -19,8 +19,10 @@ export class CreateUserDto implements Prisma.UsersCreateInput {
   @IsEnum(Role) // Update the decorator to match the type in Prisma.UsersCreateInput
   role: Role;
 
+  @Type(() => Date)
   created_at?: string | Date;
 
+  @Type(() => Date)
   updated_at?: string | Date;
 
   threads?: Prisma.ThreadsCreateNestedManyWithoutUserInput;
