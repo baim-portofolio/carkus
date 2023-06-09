@@ -28,8 +28,16 @@ export class CampusService {
     return `This action returns a #${id} campus`;
   }
 
-  update(id: number, updateCampusDto: UpdateCampusDto) {
-    return `This action updates a #${id} campus`;
+  async update(id: string, updateCampusDto: UpdateCampusDto) {
+    const updatedCampus = await this.prisma.campus.update({
+      where: { id: updateCampusDto.id },
+      data: updateCampusDto,
+    });
+    const result: ResultCreate = new ResultCreate(
+      true,
+      'Campus updated successfully',
+      updatedCampus,
+    );
   }
 
   remove(id: number) {
