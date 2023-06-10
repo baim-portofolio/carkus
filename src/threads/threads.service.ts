@@ -59,7 +59,13 @@ export class ThreadsService {
         
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} thread`;
+  async remove(id_thread: string) {
+    const removeThread = await this.prisma.threads.delete({
+      where: {
+        id: id_thread,
+      },
+    });
+
+    return removeThread;
   }
 }

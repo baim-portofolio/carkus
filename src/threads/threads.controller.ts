@@ -42,8 +42,8 @@ export class ThreadsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.threadsService.remove(+id);
+  @Delete(':id_thread')
+  remove(@Param('id_thread') id_thread: string) {
+    return this.threadsService.remove(id_thread);
   }
 }
