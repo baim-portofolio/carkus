@@ -50,7 +50,6 @@ export class CommentsService {
   }
 
   async update(id_campus: string, id_thread: string, id_comment: string, updateCommentDto: UpdateCommentDto) {
-    console.log(id_comment);
     const updateComment = await this.prisma.comments.update({
       where: {
         id: id_comment,
@@ -61,7 +60,13 @@ export class CommentsService {
     return updateComment;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
+  async remove(id_campus: string, id_thread: string, id_comment: string) {
+    const deleteComment = await this.prisma.comments.delete({
+      where: {
+        id: id_comment,
+      },
+    });
+
+    return deleteComment;
   }
 }

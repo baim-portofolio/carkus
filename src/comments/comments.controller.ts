@@ -43,6 +43,7 @@ export class CommentsController {
     return this.commentsService.findAll(id_campus, id_thread);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id_comment')
   update(
     @Param('id_campus') id_campus: string,
@@ -58,8 +59,13 @@ export class CommentsController {
     );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentsService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id_comment')
+  remove(
+    @Param('id_campus') id_campus: string,
+    @Param('id_thread') id_thread: string,
+    @Param('id_comment') id_comment: string,
+  ) {
+    return this.commentsService.remove(id_campus, id_thread, id_comment);
   }
 }
