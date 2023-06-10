@@ -11,7 +11,7 @@ export class CreateCampusDto implements Prisma.CampusCreateInput  {
 
     @IsString()
     description: string;
-
+    
     created_at?: string | Date;
     updated_at?: string | Date;
     threads?: Prisma.ThreadsCreateNestedManyWithoutCampusInput;
