@@ -10,9 +10,10 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { env } from 'process';
 import { PassportModule } from '@nestjs/passport';
 import { APP_GUARD } from '@nestjs/core';
+import { ThreadsModule } from './threads/threads.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, CampusModule],
+  imports: [PrismaModule, UsersModule, AuthModule, CampusModule, ThreadsModule],
   controllers: [],
   providers: [],
 })

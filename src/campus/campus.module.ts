@@ -6,9 +6,24 @@ import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { RolesGuard } from '../auth/role/roles.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+import { RouterModule } from '@nestjs/core';
+import { ThreadsModule } from 'src/threads/threads.module';
 
 @Module({
-  imports: [],
+  imports: [
+    RouterModule.register([
+      {
+        path: 'campus',
+        module: CampusModule,
+        children: [
+          {
+            path: ':id_campus/threads',
+            module: ThreadsModule,
+          },
+        ],
+      },
+    ])
+  ],
   controllers: [CampusController],
   providers: [
     CampusService,

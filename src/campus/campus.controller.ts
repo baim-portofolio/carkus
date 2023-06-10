@@ -16,7 +16,7 @@ import { Roles } from 'src/auth/role/roles.decorator';
 import { UseGuards } from '@nestjs/common';
 import { AllowAnonymous } from 'src/auth/guard/AllowAnonymous.decorator';
 
-@Controller('campus')
+@Controller()
 export class CampusController {
   constructor(private readonly campusService: CampusService) {}
 
@@ -34,21 +34,21 @@ export class CampusController {
   }
 
   @AllowAnonymous()
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.campusService.findOne(id);
+  @Get(':id_campus')
+  findOne(@Param('id_campus') id_campus: string) {
+    return this.campusService.findOne(id_campus);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
-  @Patch('update/:id')
-  update(@Param('id') id: string, @Body() updateCampusDto: UpdateCampusDto) {
-    return this.campusService.update(id, updateCampusDto);
+  @Patch('update/:id_campus')
+  update(@Param('id_campus') id_campus: string, @Body() updateCampusDto: UpdateCampusDto) {
+    return this.campusService.update(id_campus, updateCampusDto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
-  remove(@Param('id') id: string) {
-    return this.campusService.remove(id);
+  remove(@Param('id_campus') id_campus: string) {
+    return this.campusService.remove(id_campus);
   }
 }

@@ -21,6 +21,7 @@ export class AuthController {
     private readonly userService: UsersService,
   ) {}
 
+  @AllowAnonymous()
   @Post('register')
   async register(@Body() payload: CreateUserDto) {
     return this.userService.createUsers(payload);
@@ -34,7 +35,6 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN')
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
