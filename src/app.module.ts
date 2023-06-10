@@ -11,9 +11,10 @@ import { env } from 'process';
 import { PassportModule } from '@nestjs/passport';
 import { APP_GUARD } from '@nestjs/core';
 import { ThreadsModule } from './threads/threads.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, CampusModule, ThreadsModule],
+  imports: [PrismaModule, UsersModule, AuthModule, CampusModule, ThreadsModule, CommentsModule],
   controllers: [],
   providers: [],
 })

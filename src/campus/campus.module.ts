@@ -8,7 +8,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { RouterModule } from '@nestjs/core';
 import { ThreadsModule } from 'src/threads/threads.module';
-
+import { CommentsModule } from 'src/comments/comments.module';
 @Module({
   imports: [
     RouterModule.register([
@@ -19,6 +19,12 @@ import { ThreadsModule } from 'src/threads/threads.module';
           {
             path: ':id_campus/threads',
             module: ThreadsModule,
+            children: [
+              {
+                path: ':id_thread/comments',
+                module: CommentsModule,
+              }
+            ]
           },
         ],
       },
