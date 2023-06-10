@@ -53,7 +53,6 @@ model Comments {
   id_user    String
   id_thread  String
   comment    String
-  author     String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
