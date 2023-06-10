@@ -58,7 +58,7 @@ model Comments {
   updated_at DateTime @updatedAt
 
   user   Users    @relation("UserComment", fields: [id_user], references: [id])
-  thread Threads? @relation("ThreadComments", fields: [id_thread], references: [id])
+  thread Threads? @relation("ThreadComments", fields: [id_thread], references: [id], onDelete: Cascade)
 }
 
 model Threads {
@@ -67,11 +67,10 @@ model Threads {
   id_user    String
   title      String
   thread     String
-  author     String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  user     Users      @relation("UserAuthor", fields: [id_user], references: [id])
-  campus   Campus     @relation("ThreadCampus", fields: [id_campus], references: [id])
+  user     Users      @relation("UserAuthor", fields: [id_user], references: [id], onDelete: Cascade)
+  campus   Campus     @relation("ThreadCampus", fields: [id_campus], references: [id], onDelete: Cascade)
   comments Comments[] @relation("ThreadComments")
 }
