@@ -9,20 +9,6 @@ import { JwtService } from '@nestjs/jwt';
 import { CommentsModule } from 'src/comments/comments.module';
 
 @Module({
-  imports: [
-  //   RouterModule.register([
-  //     {
-  //       path: 'threads',
-  //       module: ThreadsModule,
-  //       children: [
-  //         {
-  //           path: ':id_thread/comments',
-  //           module: CommentsModule,
-  //         },
-  //       ]
-  //     }
-  // ]),
-],
   controllers: [ThreadsController],
   providers: [ThreadsService, PrismaService, {
     provide: APP_GUARD,

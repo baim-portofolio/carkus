@@ -6,14 +6,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ThreadsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(id_kampus: string, createThreadDto: CreateThreadDto, req) {
+  async create(id_campus: string, createThreadDto: CreateThreadDto, req) {
     const createThread = await this.prisma.threads.create({
       data: {
         ...createThreadDto,
 
         campus: {
           connect: {
-            id: id_kampus,
+            id: id_campus,
           },
         },
 
