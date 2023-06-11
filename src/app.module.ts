@@ -12,10 +12,19 @@ import { PassportModule } from '@nestjs/passport';
 import { APP_GUARD } from '@nestjs/core';
 import { ThreadsModule } from './threads/threads.module';
 import { CommentsModule } from './comments/comments.module';
+import { MiddlewareConsumer, RequestMethod } from '@nestjs/common';
+import { LoggerMiddleware } from './middleware/CommentAuth.middleware';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [PrismaModule, UsersModule, AuthModule, CampusModule, ThreadsModule, CommentsModule],
   controllers: [],
-  providers: [],
+  providers: [LoggerMiddleware, PrismaService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes({ path: '/campus/:id_campus/threads/:id_thread/comments/:id_comment', method: RequestMethod.PATCH });
+  }
+}

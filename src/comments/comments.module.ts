@@ -8,10 +8,8 @@ import { APP_GUARD, RouterModule } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { ThreadsModule } from 'src/threads/threads.module'; 
 import { forwardRef } from '@nestjs/common';
+
 @Module({
-  // imports: [
-  //   forwardRef(() => ThreadsModule), // Menggunakan forwardRef() untuk menunda evaluasi dependensi
-  // ],
   controllers: [CommentsController],
   providers: [CommentsService, PrismaService, {
     provide: APP_GUARD,
@@ -21,6 +19,7 @@ import { forwardRef } from '@nestjs/common';
     provide: APP_GUARD,
     useClass: RolesGuard,
   },
+
   JwtService,]
 })
 export class CommentsModule {}
