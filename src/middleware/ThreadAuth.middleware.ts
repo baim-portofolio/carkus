@@ -6,14 +6,14 @@ import * as jwt from 'jsonwebtoken';
 import { env } from 'process';
 
 @Injectable()
-export class CommentAuthMiddleware implements NestMiddleware {
+export class ThreadAuthMiddleware implements NestMiddleware {
   constructor(private prisma: PrismaService) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
     try {
       const context = new ExecutionContextHost([req]);
       const request = context.switchToHttp().getRequest();
-      const { id_comment } = request.params;
+      const { id_thread } = request.params;
 
       const authHeader = request.headers.authorization;
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -28,9 +28,9 @@ export class CommentAuthMiddleware implements NestMiddleware {
         throw new UnauthorizedException('Invalid token');
       }
 
-      const findComment = await this.prisma.comments.findUnique({
+      const findThread = await this.prisma.threads.findUnique({
         where: {
-          id: id_comment,
+          id: id_thread,
         },
         include: {
           user: {
@@ -41,7 +41,7 @@ export class CommentAuthMiddleware implements NestMiddleware {
         },
       });
 
-      if (findComment.user.id !== decodedToken.id || decodedToken.role !== 'admin') {
+      if (findThread.user.id !== decodedToken.id || decodedToken.role !== 'admin') {
         throw new UnauthorizedException('You are not authorized');
       }
 

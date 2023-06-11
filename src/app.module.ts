@@ -13,8 +13,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThreadsModule } from './threads/threads.module';
 import { CommentsModule } from './comments/comments.module';
 import { MiddlewareConsumer, RequestMethod } from '@nestjs/common';
-import { LoggerMiddleware } from './middleware/CommentAuth.middleware';
+import { CommentAuthMiddleware } from './middleware/CommentAuth.middleware';
 import { PrismaService } from './prisma/prisma.service';
+import { ThreadAuthMiddleware } from './middleware/ThreadAuth.middleware';
 
 @Module({
   imports: [
@@ -26,12 +27,12 @@ import { PrismaService } from './prisma/prisma.service';
     CommentsModule,
   ],
   controllers: [],
-  providers: [LoggerMiddleware, PrismaService],
+  providers: [CommentAuthMiddleware, PrismaService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(LoggerMiddleware)
+      .apply(CommentAuthMiddleware)
       .forRoutes(
         {
           path: '/campus/:id_campus/threads/:id_thread/comments/:id_comment',
@@ -39,6 +40,17 @@ export class AppModule {
         },
         {
           path: '/campus/:id_campus/threads/:id_thread/comments/:id_comment',
+          method: RequestMethod.DELETE,
+        },
+      )
+      .apply(ThreadAuthMiddleware)
+      .forRoutes(
+        {
+          path: '/campus/:id_campus/threads/:id_thread',
+          method: RequestMethod.PATCH,
+        },
+        {
+          path: '/campus/:id_campus/threads/:id_thread',
           method: RequestMethod.DELETE,
         },
       );
