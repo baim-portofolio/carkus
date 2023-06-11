@@ -17,7 +17,14 @@ import { LoggerMiddleware } from './middleware/CommentAuth.middleware';
 import { PrismaService } from './prisma/prisma.service';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, CampusModule, ThreadsModule, CommentsModule],
+  imports: [
+    PrismaModule,
+    UsersModule,
+    AuthModule,
+    CampusModule,
+    ThreadsModule,
+    CommentsModule,
+  ],
   controllers: [],
   providers: [LoggerMiddleware, PrismaService],
 })
@@ -25,6 +32,15 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes({ path: '/campus/:id_campus/threads/:id_thread/comments/:id_comment', method: RequestMethod.PATCH });
+      .forRoutes(
+        {
+          path: '/campus/:id_campus/threads/:id_thread/comments/:id_comment',
+          method: RequestMethod.PATCH,
+        },
+        {
+          path: '/campus/:id_campus/threads/:id_thread/comments/:id_comment',
+          method: RequestMethod.DELETE,
+        },
+      );
   }
 }
