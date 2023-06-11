@@ -1,11 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Users, Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ConflictException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-thread.dto';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { SearchUserDto } from './dto/search-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -94,6 +99,70 @@ export class UsersService {
     } catch (error) {
       throw new HttpException(
         'Error while deleting user',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async searchUsers(query: SearchUserDto) {
+    try {
+      const { id, email, username } = query;
+
+      const users = await this.prisma.users.findMany({
+        where: {
+          id: id ? id : undefined,
+          email: email ? email : undefined,
+          username: {
+            contains: username ? username : undefined,
+          },
+        },
+        select: {
+          id: true,
+          email: true,
+          username: true,
+          role: true,
+        },
+      });
+
+      if (users.length === 0) {
+        throw new NotFoundException('Users not found');
+      }
+
+      return users;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      }
+      throw new HttpException(
+        'Failed to search users',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async findOneUser(id_user: string) {
+    try {
+      const user = await this.prisma.users.findUnique({
+        where: {
+          id: id_user,
+        },
+        include: {
+          threads: true,
+          comments: true,
+        },
+      });
+  
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+  
+      return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      }
+      throw new HttpException(
+        'Failed to search user',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
