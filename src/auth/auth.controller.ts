@@ -10,7 +10,7 @@ import { LocalAuthGuard } from './guard/local-auth.guard';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { UsersService } from 'src/users/users.service';
-import { CreateUserDto } from 'src/users/dto/createUsers.dto';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { RolesGuard } from './role/roles.guard';
 import { Roles } from './role/roles.decorator';
 import { AllowAnonymous } from './guard/AllowAnonymous.decorator';

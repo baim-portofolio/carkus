@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ResultLogin } from './dto/result-login.dto';
 import { Request } from 'express';
 
+
 @Injectable()
 export class AuthService {
   constructor(private prisma: PrismaService, private jwtService: JwtService) {}
@@ -40,4 +41,5 @@ export class AuthService {
       throw new Error('Failed to login');
     }
   }
+
 }

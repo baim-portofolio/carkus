@@ -16,6 +16,7 @@ import { MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { CommentAuthMiddleware } from './middleware/CommentAuth.middleware';
 import { PrismaService } from './prisma/prisma.service';
 import { ThreadAuthMiddleware } from './middleware/ThreadAuth.middleware';
+import { UserAuthMiddleware } from './middleware/UserAuth.middleware';
 
 @Module({
   imports: [
@@ -51,6 +52,17 @@ export class AppModule {
         },
         {
           path: '/campus/:id_campus/threads/:id_thread',
+          method: RequestMethod.DELETE,
+        },
+      )
+      .apply(UserAuthMiddleware)
+      .forRoutes(
+        {
+          path: '/users/:id_user',
+          method: RequestMethod.PATCH,
+        },
+        {
+          path: '/users/:id_user',
           method: RequestMethod.DELETE,
         },
       );
