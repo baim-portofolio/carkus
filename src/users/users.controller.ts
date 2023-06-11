@@ -22,12 +22,6 @@ export class UsersController {
   }
 
   @AllowAnonymous()
-  @Get()
-  async searchUsers(@Query() query: SearchUserDto) {
-    return this.usersService.searchUsers(query);
-  }
-
-  @AllowAnonymous()
   @Get(':id_user')
   async getOneUsers(@Param('id_user') id_user: string) {
     return this.usersService.findOneUser(id_user);

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Request,
+  Query,
 } from '@nestjs/common';
 import { ThreadsService } from './threads.service';
 import { CreateThreadDto } from './dto/create-thread.dto';
@@ -14,7 +15,7 @@ import { UpdateThreadDto } from './dto/update-thread.dto';
 import { AllowAnonymous } from 'src/auth/guard/AllowAnonymous.decorator';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-
+import { SearchThreadDto } from '../search/dto/search-thread.dto';
 @Controller()
 export class ThreadsController {
   constructor(private readonly threadsService: ThreadsService) {}

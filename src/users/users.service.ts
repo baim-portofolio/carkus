@@ -104,42 +104,6 @@ export class UsersService {
     }
   }
 
-  async searchUsers(query: SearchUserDto) {
-    try {
-      const { id, email, username } = query;
-
-      const users = await this.prisma.users.findMany({
-        where: {
-          id: id ? id : undefined,
-          email: email ? email : undefined,
-          username: {
-            contains: username ? username : undefined,
-          },
-        },
-        select: {
-          id: true,
-          email: true,
-          username: true,
-          role: true,
-        },
-      });
-
-      if (users.length === 0) {
-        throw new NotFoundException('Users not found');
-      }
-
-      return users;
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
-      }
-      throw new HttpException(
-        'Failed to search users',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
   async findOneUser(id_user: string) {
     try {
       const user = await this.prisma.users.findUnique({

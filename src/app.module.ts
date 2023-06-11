@@ -17,6 +17,7 @@ import { CommentAuthMiddleware } from './middleware/CommentAuth.middleware';
 import { PrismaService } from './prisma/prisma.service';
 import { ThreadAuthMiddleware } from './middleware/ThreadAuth.middleware';
 import { UserAuthMiddleware } from './middleware/UserAuth.middleware';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserAuthMiddleware } from './middleware/UserAuth.middleware';
     CampusModule,
     ThreadsModule,
     CommentsModule,
+    SearchModule,
   ],
   controllers: [],
   providers: [CommentAuthMiddleware, PrismaService],
