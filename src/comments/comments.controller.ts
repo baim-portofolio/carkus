@@ -22,13 +22,11 @@ export class CommentsController {
   @Post()
   create(
     @Body() createCommentDto: CreateCommentDto,
-    @Param('id_campus') id_campus: string,
     @Param('id_thread') id_thread: string,
     @Request() req,
   ) {
     return this.commentsService.create(
       createCommentDto,
-      id_campus,
       id_thread,
       req.user,
     );
@@ -38,22 +36,17 @@ export class CommentsController {
   @Get()
   findAll(
     @Param('id_campus') id_campus: string,
-    @Param('id_thread') id_thread: string,
   ) {
-    return this.commentsService.findAll(id_campus, id_thread);
+    return this.commentsService.findAll(id_campus);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id_comment')
   update(
-    @Param('id_campus') id_campus: string,
-    @Param('id_thread') id_thread: string,
     @Param('id_comment') id_comment: string,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
     return this.commentsService.update(
-      id_campus,
-      id_thread,
       id_comment,
       updateCommentDto,
     );
@@ -62,10 +55,8 @@ export class CommentsController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id_comment')
   remove(
-    @Param('id_campus') id_campus: string,
-    @Param('id_thread') id_thread: string,
     @Param('id_comment') id_comment: string,
   ) {
-    return this.commentsService.remove(id_campus, id_thread, id_comment);
+    return this.commentsService.remove(id_comment);
   }
 }
