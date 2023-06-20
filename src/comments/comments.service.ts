@@ -3,6 +3,10 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { PageDto } from '../common/result/page.dto';
+import { PageMetaDto } from '../common/result/page-meta.dto';
+import { PageOptionsDto } from '../common/result/page-options.dto';
+
 @Injectable()
 export class CommentsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -25,7 +29,11 @@ export class CommentsService {
         },
       });
 
-      return createComment;
+      return {
+        sucsses: true,
+        message: 'Comment created',
+        data: createComment,
+      };
     } catch (error) {
       throw new HttpException(
         'Error while creating comment',
@@ -34,7 +42,7 @@ export class CommentsService {
     }
   }
 
-  async findAll(id_thread: string) {
+  async findAll(id_thread: string, page: number, perPage: number) {
     try {
       const resultComments = await this.prisma.comments.findMany({
         where: {
@@ -48,9 +56,19 @@ export class CommentsService {
             },
           },
         },
+        skip: (page - 1) * perPage,
+        take: perPage,
       });
 
-      return resultComments;
+      const total = resultComments.length;
+      const lastPage = Math.ceil(total / perPage);
+      const baseUrl = `campus/${id_thread}/comments/`;
+      const pageOptionsDto = new PageOptionsDto(page, perPage);
+      const pageMetaDto = new PageMetaDto(total, pageOptionsDto, baseUrl);
+      const pageDto = new PageDto(pageMetaDto, resultComments);
+
+
+      return pageDto;
     } catch (error) {
       throw new HttpException(
         'Error while finding comments',
@@ -68,7 +86,11 @@ export class CommentsService {
         data: updateCommentDto,
       });
 
-      return updateComment;
+      return {
+        sucsses: true,
+        message: 'Comment updated',
+        data: updateComment,
+      };
     } catch (error) {
       throw new HttpException(
         'Error while updating comment',
@@ -85,7 +107,11 @@ export class CommentsService {
         },
       });
 
-      return deleteComment;
+      return {
+        sucsses: true,
+        message: 'Comment deleted',
+        data: deleteComment,
+      };
     } catch (error) {
       throw new HttpException(
         'Error while deleting comment',

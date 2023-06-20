@@ -56,7 +56,7 @@ model Comments {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  user   Users    @relation("UserComment", fields: [id_user], references: [id])
+  user   Users    @relation("UserComment", fields: [id_user], references: [id], onDelete: Cascade)
   thread Threads? @relation("ThreadComments", fields: [id_thread], references: [id], onDelete: Cascade)
 }
 

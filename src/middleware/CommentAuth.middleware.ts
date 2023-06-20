@@ -1,4 +1,8 @@
-import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NestMiddleware,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
@@ -41,11 +45,14 @@ export class CommentAuthMiddleware implements NestMiddleware {
         },
       });
 
-      if (findComment.user.id !== decodedToken.id || decodedToken.role !== 'admin') {
+      if (
+        findComment.user.id === decodedToken.id ||
+        decodedToken.role === 'admin'
+      ) {
+        next();
+      } else {
         throw new UnauthorizedException('You are not authorized');
       }
-
-      next();
     } catch (error) {
       throw new UnauthorizedException();
     }

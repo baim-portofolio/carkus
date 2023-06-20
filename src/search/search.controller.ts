@@ -11,19 +11,19 @@ export class SearchController {
 
   @AllowAnonymous()
   @Get('campus')
-  searchCampus(@Query() query: SearchCampusDto) {
-    return this.searchService.searchCampus(query);
+  searchCampus(@Query() query: SearchCampusDto, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
+    return this.searchService.searchCampus(query, page, perPage);
   }
 
   @AllowAnonymous()
   @Get('users')
-  searchUsers(@Query() query: SearchUserDto) {
-    return this.searchService.searchUsers(query);
+  searchUsers(@Query() query: SearchUserDto, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
+    return this.searchService.searchUsers(query, page, perPage);
   }
 
   @AllowAnonymous()
   @Get('threads')
-  searchThreads(@Query() query: SearchThreadDto) {
-    return this.searchService.searchThreads(query);
+  searchThreads(@Query() query: SearchThreadDto, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
+    return this.searchService.searchThreads(query, page, perPage);
   }
 }

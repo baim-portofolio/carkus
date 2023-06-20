@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CampusService } from './campus.service';
 import { CreateCampusDto } from './dto/create-campus.dto';
@@ -15,6 +16,8 @@ import { RolesGuard } from 'src/auth/role/roles.guard';
 import { Roles } from 'src/auth/role/roles.decorator';
 import { UseGuards } from '@nestjs/common';
 import { AllowAnonymous } from 'src/auth/guard/AllowAnonymous.decorator';
+import { Campus } from '@prisma/client';
+import { PageDto } from 'src/common/result/page.dto';
 
 @Controller()
 export class CampusController {
@@ -29,26 +32,27 @@ export class CampusController {
 
   @AllowAnonymous()
   @Get()
-  findAll() {
-    return this.campusService.findAll();
+  async findAll(@Query('page') page: number = 1, @Query('perPage') perPage: number = 10): Promise<PageDto<Campus>> {
+    return this.campusService.findAll(+page, +perPage);
   }
 
   @AllowAnonymous()
   @Get(':id_campus')
-  findOne(@Param('id_campus') id_campus: string) {
+  async findOne(@Param('id_campus') id_campus: string) {
     return this.campusService.findOne(id_campus);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Patch('update/:id_campus')
-  update(@Param('id_campus') id_campus: string, @Body() updateCampusDto: UpdateCampusDto) {
+  async update(@Param('id_campus') id_campus: string, @Body() updateCampusDto: UpdateCampusDto) {
     return this.campusService.update(id_campus, updateCampusDto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
-  remove(@Param('id_campus') id_campus: string) {
+  @Delete(':id_campus')
+  async remove(@Param('id_campus') id_campus: string) {
     return this.campusService.remove(id_campus);
   }
 }

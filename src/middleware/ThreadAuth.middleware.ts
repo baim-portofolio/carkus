@@ -41,11 +41,11 @@ export class ThreadAuthMiddleware implements NestMiddleware {
         },
       });
 
-      if (findThread.user.id !== decodedToken.id || decodedToken.role !== 'admin') {
+      if (findThread.user.id === decodedToken.id || decodedToken.role === 'ADMIN') {
+        next();
+      } else {
         throw new UnauthorizedException('You are not authorized');
       }
-
-      next();
     } catch (error) {
       throw new UnauthorizedException();
     }

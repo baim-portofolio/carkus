@@ -8,44 +8,54 @@ import { SearchCampusDto } from './dto/search-campus.dto';
 import { SearchUserDto } from 'src/users/dto/search-user.dto';
 import { SearchThreadDto } from './dto/search-thread.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-
+import { PageDto } from 'src/common/result/page.dto';
+import { PageMetaDto } from 'src/common/result/page-meta.dto';
+import { PageOptionsDto } from 'src/common/result/page-options.dto';
+import { Campus, Users } from '@prisma/client';
+import { promises } from 'dns';
 @Injectable()
 export class SearchService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async searchCampus(query: SearchCampusDto) {
+  async searchCampus(query: SearchCampusDto, page: number, perPage: number): Promise<PageDto<Campus>> {
     try {
       const { campus_name, address } = query;
       const searchCampus = await this.prisma.campus.findMany({
         where: {
           campus_name: {
-            contains: campus_name ? campus_name : undefined,
+            contains: campus_name || undefined,
             mode: 'insensitive',
           },
           address: {
-            contains: address ? address : undefined,
+            contains: address || undefined,
             mode: 'insensitive',
           },
         },
+        skip: (page - 1) * perPage,
+        take: perPage,
       });
-
-      if (!searchCampus) {
+  
+      const total = searchCampus.length;
+      const lastPage = Math.ceil(total / perPage);
+      const baseUrl = 'search/campus/';
+      const pageOptionsDto = new PageOptionsDto(page, perPage);
+      const pageMetaDto = new PageMetaDto(total, pageOptionsDto, baseUrl);
+      const pageDto = new PageDto(pageMetaDto, searchCampus);
+  
+      if (pageDto.data.length === 0) {
         throw new NotFoundException('Campus not found');
       }
-
-      return searchCampus;
+      return pageDto;
     } catch (error) {
       if (error instanceof NotFoundException) {
-        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+        throw error;
+      } else {
+        throw new Error('Failed to retrieve campuses');
       }
-      throw new HttpException(
-        'Failed to search campus',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
     }
   }
 
-  async searchUsers(query: SearchUserDto) {
+  async searchUsers(query: SearchUserDto, page: number, perPage: number) {
     try {
       const { id, email, username } = query;
 
@@ -63,25 +73,33 @@ export class SearchService {
           username: true,
           role: true,
         },
+        skip: (page - 1) * perPage,
+        take: perPage,
       });
+
+      const total = users.length;
+      const lastPage = Math.ceil(total / perPage);
+      const baseUrl = 'search/users/';
+      const pageOptionsDto = new PageOptionsDto(page, perPage);
+      const pageMetaDto = new PageMetaDto(total, pageOptionsDto, baseUrl);
+      const pageDto = new PageDto(pageMetaDto, users);
+
 
       if (users.length === 0) {
         throw new NotFoundException('Users not found');
       }
 
-      return users;
+      return pageDto;
     } catch (error) {
       if (error instanceof NotFoundException) {
-        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+        throw error;
+      } else {
+        throw new Error('Failed to retrieve user');
       }
-      throw new HttpException(
-        'Failed to search users',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
     }
   }
 
-  async searchThreads(query: SearchThreadDto) {
+  async searchThreads(query: SearchThreadDto, page: number, perPage: number) {
     try {
       const { title, thread } = query;
       const searchThreads = await this.prisma.threads.findMany({
@@ -95,21 +113,28 @@ export class SearchService {
             mode: 'insensitive',
           },
         },
+        skip: (page - 1) * perPage,
+        take: perPage,
       });
+
+      const total = searchThreads.length;
+      const lastPage = Math.ceil(total / perPage);
+      const baseUrl = 'search/threads/';
+      const pageOptionsDto = new PageOptionsDto(page, perPage);
+      const pageMetaDto = new PageMetaDto(total, pageOptionsDto, baseUrl);
+      const pageDto = new PageDto(pageMetaDto, searchThreads);
 
       if (!searchThreads) {
         throw new NotFoundException('Threads not found');
       }
 
-      return searchThreads;
+      return pageDto;
     } catch (error) {
       if (error instanceof NotFoundException) {
-        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+        throw error;
+      } else {
+        throw new Error('Failed to retrieve thread');
       }
-      throw new HttpException(
-        'Failed to search threads',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
     }
   }
 }

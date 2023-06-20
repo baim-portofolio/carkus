@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Request,
+  Query,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -35,9 +36,9 @@ export class CommentsController {
   @AllowAnonymous()
   @Get()
   findAll(
-    @Param('id_campus') id_campus: string,
+    @Param('id_thread') id_thread: string, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10
   ) {
-    return this.commentsService.findAll(id_campus);
+    return this.commentsService.findAll(id_thread, page, perPage);
   }
 
   @UseGuards(JwtAuthGuard)

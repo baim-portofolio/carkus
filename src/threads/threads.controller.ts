@@ -32,8 +32,8 @@ export class ThreadsController {
 
   @AllowAnonymous()
   @Get()
-  findAll(@Param('id_campus') id_campus: string) {
-    return this.threadsService.findAll(id_campus);
+  findAll(@Param('id_campus') id_campus: string, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
+    return this.threadsService.findAll(id_campus, page, perPage);
   }
 
   @UseGuards(JwtAuthGuard)

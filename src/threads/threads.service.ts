@@ -4,6 +4,10 @@ import { UpdateThreadDto } from './dto/update-thread.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { SearchThreadDto } from '../search/dto/search-thread.dto';
+import { PageDto } from 'src/common/result/page.dto';
+import { PageMetaDto } from 'src/common/result/page-meta.dto';
+import { PageOptionsDto } from 'src/common/result/page-options.dto';
+import { Threads } from '@prisma/client';
 @Injectable()
 export class ThreadsService {
   constructor(private prisma: PrismaService) {}
@@ -26,7 +30,11 @@ export class ThreadsService {
         },
       });
 
-      return createThread;
+      return {
+        sucsses: true,
+        message: 'Thread created',
+        data: createThread,
+      }
     } catch (error) {
       throw new HttpException(
         'Error while creating thread',
@@ -35,23 +43,33 @@ export class ThreadsService {
     }
   }
 
-  async findAll(id_campus: string) {
+  async findAll(id_campus: string, page: number, perPage: number) {
     try {
-      const resultThreads = await this.prisma.threads.findMany({
+      let resultThreads = await this.prisma.threads.findMany({
         where: {
           id_campus: id_campus,
         },
         include: {
           user: {
             select: {
+              id: true,
               username: true,
               role: true,
             },
           },
         },
+        skip: (page - 1) * perPage,
+        take: perPage,
       });
 
-      return resultThreads;
+      const total = resultThreads.length;
+      const lastPage = Math.ceil(total / perPage);
+      const baseUrl = `/campus/${id_campus}/threads/`;
+      const pageOptionsDto = new PageOptionsDto(page, perPage);
+      const pageMetaDto = new PageMetaDto(total, pageOptionsDto, baseUrl);
+      const pageDto = new PageDto<Threads>(pageMetaDto, resultThreads);
+      return pageDto;
+
     } catch (error) {
       throw new HttpException(
         'Error while finding threads',
@@ -71,7 +89,11 @@ export class ThreadsService {
         },
       });
 
-      return updateThread;
+      return {
+        sucsses: true,
+        message: 'Thread updated',
+        data: updateThread,
+      };
     } catch (error) {
       throw new HttpException(
         'Error while updating thread',
@@ -88,7 +110,11 @@ export class ThreadsService {
         },
       });
 
-      return removeThread;
+      return {
+        sucsses: true,
+        message: 'Thread removed',
+        data: removeThread,
+      };
     } catch (error) {
       throw new HttpException(
         'Error while removing thread',

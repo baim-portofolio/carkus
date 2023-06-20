@@ -48,10 +48,14 @@ export class UsersService {
         data: userDataWithoutPassword,
       };
     } catch (error) {
-      throw new HttpException(
-        'Error while creating user',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      if (error instanceof ConflictException) {
+        throw error;
+      } else {
+        throw new HttpException(
+          'Error while creating user',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 
@@ -94,7 +98,6 @@ export class UsersService {
       return {
         success: true,
         message: 'User deleted successfully',
-        data: deleteUser,
       };
     } catch (error) {
       throw new HttpException(
@@ -115,12 +118,26 @@ export class UsersService {
           comments: true,
         },
       });
-  
+
       if (!user) {
         throw new NotFoundException('User not found');
       }
-  
-      return user;
+
+      if (user.threads.length === 0) {
+        user.threads = null;
+      }
+
+      if (user.comments.length === 0) {
+        user.comments = null;
+      }
+
+      const { password: _, ...userDataWithoutPassword } = user;
+
+      return {
+        success: true,
+        message: 'Success to get user',
+        data: userDataWithoutPassword,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new HttpException(error.message, HttpStatus.NOT_FOUND);
