@@ -51,6 +51,7 @@ export class UsersService {
       if (error instanceof ConflictException) {
         throw error;
       } else {
+        console.log(error);
         throw new HttpException(
           'Error while creating user',
           HttpStatus.INTERNAL_SERVER_ERROR,
