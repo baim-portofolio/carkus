@@ -24,17 +24,62 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+CARKUS is the culmination of Kampus Merdeka's final project at Skilvul, in partnership with the Asean Youth Forum. This platform aims to create a safe and inclusive space where young individuals can freely express their opinions and seek answers to their questions. With a strong emphasis on responsible engagement, CARKUS encourages respectful discussions and provides moderation tools to ensure a positive environment. Its interactive Q&A feature enables users to share knowledge and engage in insightful conversations. CARKUS empowers the youth to voice their thoughts and inquiries, fostering a vibrant community of diverse perspectives.
+
+## Entity Relationship Diagram (ERD)
+
+The following is the Entity Relationship Diagram (ERD) for the CARKUS application:
+
+![CARKUS ERD](https://github.com/baim-portofolio/carkus/blob/main/assets/ERD%20CARKUS.png)
+
+The ERD illustrates the relationships between different entities in the CARKUS database. Here is a brief explanation of each entity:
+
+- **Users**: Represents the users of the application. Users can have a role of either "USER" or "ADMIN". They can create threads and leave comments.
+
+- **Admins**: Represents the administrators of specific campuses. Each admin is associated with a user and a campus. Admins have additional privileges and responsibilities compared to regular users.
+
+- **Campus**: Represents the campuses where discussions and threads take place. Each campus has a name, address, description, and associated admins. Campuses can have multiple threads.
+
+- **Comments**: Represents the comments left by users on threads. Each comment is associated with a user and a thread. Comments capture the user's input and are timestamped.
+
+- **Threads**: Represents the discussion threads created by users. Each thread belongs to a specific campus and is associated with a user. Threads contain a title, content, and a collection of comments.
+
+This ERD provides a visual representation of the database structure and the relationships between entities in the CARKUS application. It can help in understanding the data model and designing queries or data operations accordingly.
+
+## Tools
+CARKUS is built using the following technologies and tools:
+
+- **Typescript**: CARKUS utilizes TypeScript, a statically typed superset of JavaScript, to enhance code readability, maintainability, and developer productivity.
+
+- **NestJS**: CARKUS leverages the power of NestJS, a progressive Node.js framework, for building efficient and scalable server-side applications. NestJS provides a modular architecture, dependency injection, and a rich set of features for developing robust APIs.
+
+- **Prisma**: CARKUS integrates Prisma, a modern database toolkit, for efficient and type-safe database access. Prisma enables seamless database management, schema migrations, and query building, ensuring reliable data operations.
+
+- **PassportJS**: CARKUS employs PassportJS, a popular authentication middleware for Node.js, to handle user authentication and authorization. PassportJS offers a flexible and modular approach to implement various authentication strategies, ensuring secure user access to the platform.
+
+- **PostgreSQL**: CARKUS utilizes PostgreSQL, a powerful open-source relational database management system, as the underlying data storage. PostgreSQL provides robust data integrity, transaction support, and scalability, ensuring the reliability of CARKUS' data management.
+
+These technologies and tools have been carefully selected to provide a solid foundation for developing a high-quality, secure, and performant platform for youth engagement with CARKUS.
 
 ## Installation
 
 ```bash
 $ npm install
 ```
+## Variables
+
+The following variables are used in the `.env` file for configuring the application:
+
+- `DATABASE_URL`: This variable is used to specify the URL or connection string for the PostgreSQL database. It allows the application to establish a connection with the database and perform data operations.
+
+- `SECRET_KEY`: This variable represents a secret key used for generating secure hashes. The secret key is crucial for maintaining the security and integrity of the application's data and user interactions.
 
 ## Running the app
+Make sure to create the CARKUS database in PostgreSQL before running the application. After creating the database, perform a database pull to synchronize the schema and populate any necessary initial data. This ensures that the application has the required database structure and data for proper functionality.
 
 ```bash
+$ npx prisma generate
+
 # development
 $ npm run start
 
@@ -45,18 +90,13 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## Documentation
 
-```bash
-# unit tests
-$ npm run test
+The documentation for CARKUS can be found [here](https://documenter.getpostman.com/view/19404602/2s93sjW9dA). It provides comprehensive information about the CARKUS API, including available endpoints, request methods, parameters, and example requests/responses.
 
-# e2e tests
-$ npm run test:e2e
+The [CARKUS API Documentation](https://documenter.getpostman.com/view/19404602/2s93sjW9dA) serves as a valuable resource for developers, offering all the necessary details to effectively integrate and interact with the platform. It enables users to express their opinions, ask questions, and engage responsibly.
 
-# test coverage
-$ npm run test:cov
-```
+Visit the [CARKUS API Documentation](https://documenter.getpostman.com/view/19404602/2s93sjW9dA) to explore the endpoints and understand how to interact with CARKUS efficiently.
 
 ## Support
 
