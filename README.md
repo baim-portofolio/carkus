@@ -98,6 +98,9 @@ The [CARKUS API Documentation](https://documenter.getpostman.com/view/19404602/2
 
 Visit the [CARKUS API Documentation](https://documenter.getpostman.com/view/19404602/2s93sjW9dA) to explore the endpoints and understand how to interact with CARKUS efficiently.
 
+## Production
+The production version of the Carkus project is deployed on Vercel. You can access it [here](https://carkus.vercel.app).
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
