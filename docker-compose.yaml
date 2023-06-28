@@ -1,0 +1,40 @@
+version: '3'
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 2246
+      PGDATA: /data/postgres
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres:/data/postgres
+
+  prisma:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    volumes:
+      - ./:/app
+      - prisma:/app/prisma
+    command: sh -c "npx prisma db push && npx prisma db pull  "
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+      - prisma
+    volumes:
+      - ./:/app
+
+volumes:
+  postgres:
+  prisma:
